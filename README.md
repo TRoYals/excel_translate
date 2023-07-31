@@ -7,6 +7,14 @@
 - [ ] 开放 batch_size 参数(每次请求翻译多少个 excel_cell)
 - [ ] 使用并发来加快翻译速度
 
+## 步骤
+
+1.  安装 python 环境
+2.  安装本项目包
+3.  配置 OPENAI_API_KEY
+4.  配置 你需要自定义的翻译规则
+5.  开始使用
+
 ## 安装
 
 首先需要有 python 环境 (3.10+)
@@ -26,13 +34,17 @@ pip install excel_translate-0.1.8-py3-none-any.whl (这个文件你可以在 rel
 配置完成后, 通过以下方式进行文件的翻译
 
 ```
+"""
 excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30
-
+"""
 ```
 
 -i: 输入文件的路径
+
 -o: 输出文件的路径
+
 -i_range: 输入文件的翻译范围 (excel 的单元格范围)
+
 -o_range: 输出文件的翻译范围 (excel 的单元格范围)
 
 ## 使用的 prompt:
