@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "excel-translate"
-version = "0.1.0"
+version = "0.1.9"
 description = "translate excel columns based on customized rules!"
 authors = ["TRoYals <aozora00321@gmail.com>"]
 license = "MIT"
@@ -24,4 +24,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-excel_translate = "main"
+excel_translate = "excel_translate.main:main"

@@ -6,6 +6,7 @@ from openpyxl.utils import (
 from openpyxl.utils.cell import coordinate_from_string, column_index_from_string
 import numpy as np
 import os
+from excel_translate.ai_utils import AI_chat
 
 
 class ExcelProcessor:
@@ -86,10 +87,10 @@ class ExcelProcessor:
         for row in sheet[self.input_range]:
             row_data = [cell.value for cell in row]
             input_data.append(row_data)
-        print(input_data)
+        translated_data = self.translate_data(input_data)
         # Write the output range data
-        for output_row, input_row in zip(sheet[self.output_range], input_data):
-            print(output_row, input_row)
+        for output_row, input_row in zip(sheet[self.output_range], translated_data):
+            # print(output_row, input_row)
             for output_cell, input_value in zip(output_row, input_row):
                 output_cell.value = input_value
 
@@ -98,16 +99,19 @@ class ExcelProcessor:
 
     @staticmethod
     def translate_data(input_data, batch_size=10):
+        input_data = np.array(input_data)
         num_rows, num_cols = input_data.shape
         translated_data = []
         for i in range(0, num_rows, batch_size):
             batch = input_data[i : i + batch_size]
             batch_list = batch.ravel().tolist()
-            translated_batch_list = [x + "s" for x in batch_list]
+            print(batch_list)
+            translated_batch_list = AI_chat().translated_list_to_list(batch_list)
+            print(translated_batch_list)
             translated_batch = np.array(translated_batch_list).reshape(batch.shape)
             translated_data.append(translated_batch)
         translated_data = np.concatenate(translated_data)
-        return translated_data
+        return translated_data.tolist()
 
 
 if __name__ == "__main__":
@@ -118,8 +122,8 @@ if __name__ == "__main__":
     output_file = (
         "/Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx"
     )
-    input_range = "G1:H10"
-    output_range = "I1:J10"
+    input_range = "G1:G100"
+    output_range = "I1:I100"
 
     excel_processor = ExcelProcessor(
         input_file,
