@@ -2,6 +2,11 @@
 
 使用 ChatGPT 翻译 excel 文件至任何语言
 
+## TODO:
+
+- [ ] 开放 batch_size 参数(每次请求翻译多少个 excel_cell)
+- [ ] 使用并发来加快翻译速度
+
 ## 安装
 
 首先需要有 python 环境 (3.10+)
