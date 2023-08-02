@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "excel-translate"
-version = "0.1.10"
+version = "0.1.11"
 description = "translate excel columns based on customized rules!"
 authors = ["TRoYals <aozora00321@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,6 @@ packages = [{include = "excel_translate"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 langchain = "^0.0.244"
-jupyter = "^1.0.0"
 python-dotenv = "^1.0.0"
 openpyxl = "^3.1.2"
 

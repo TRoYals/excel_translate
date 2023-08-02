@@ -1,6 +1,18 @@
 import argparse
 from excel_translate.ai_utils import AI_chat
 from excel_translate.excel_opreations import ExcelProcessor
+import os
+import platform
+import subprocess
+
+
+def edit_config_file():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, "config.json")
+    if platform.system() == "Windows":
+        subprocess.run(["notepad", config_path])
+    else:
+        subprocess.run(["vim", config_path])
 
 
 def main():
@@ -41,11 +53,10 @@ def main():
     args = parser.parse_args()
 
     if args.command == "edit":
-        ai_chat = AI_chat()
         if args.env:
-            ai_chat.edit_env_file()
+            edit_config_file()
         if args.config:
-            ai_chat.edit_config_file()
+            edit_config_file()
     elif args.command == "process":
         excel_processor = ExcelProcessor(
             args.input_file,
