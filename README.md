@@ -28,9 +28,12 @@ win 搜索 cmd, mac 搜索 terminal
 
 ### 3. 安装本项目包
 
-首先复制下载下载来的路径, 然后在 cmd/terminal 中输入以下指令
+首先下载 abcde.whl,然后复制你下载下来的文件路径, 然后在 cmd/terminal 中输入以下指令
 
 pip install {你的路径}
+
+如
+`pip install /xxx/xxx/excel_translate-0.1.10-py3-none-any.whl`
 
 ### 4. 配置 OPENAI_API_KEY
 
@@ -45,14 +48,10 @@ excel_translate edit --config
 
 ### 6.开始使用
 
-"""
-excel_translate process -i {需要翻译的 xlsx 文件} -o {翻译出来的结果路径(文件可以存在)} -i_range {需要翻译的范围如"G1:G30"} -o_range {翻译的结果输出的范围如:"I1:I30"}
-"""
+`excel_translate process -i {需要翻译的 xlsx 文件} -o {翻译出来的结果路径(文件可以存在)} -i_range {需要翻译的范围如"G1:G30"} -o_range {翻译的结果输出的范围如:"I1:I30"}`
 
 一个参考例子:
-"""
-excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30
-"""
+`excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30`
 
 ## 使用方法
 
@@ -63,9 +62,7 @@ excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/test
 
 配置完成后, 通过以下方式进行文件的翻译
 
-"""
-excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30
-"""
+`excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30`
 
 -i: 输入文件的路径
 
@@ -88,4 +85,4 @@ extra_text 字段: 额外的指令
 
 你可以通过这个指令编辑以上的字段: `excel_translate edit --config`
 
-输入这个指令后, 你可以使用`vim`来编辑 config.json
+输入这个指令后, 你可以使用`vim`来编辑 config.json(mac\linux), `notepad` 来编辑 config.json(win)
