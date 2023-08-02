@@ -10,19 +10,49 @@
 ## 步骤
 
 1.  安装 python 环境
-2.  安装本项目包
-3.  配置 OPENAI_API_KEY
-4.  配置 你需要自定义的翻译规则
-5.  开始使用
+2.  进入 cmd
+3.  安装本项目包
+4.  配置 OPENAI_API_KEY
+5.  配置 你需要自定义的翻译规则
+6.  开始使用
 
-## 安装
+## 详细步骤
 
-首先需要有 python 环境 (3.10+)
+### 1. 安装 python 环境
 
-然后安装本项目包
-pip install excel_translate-0.1.8-py3-none-any.whl (这个文件你可以在 release 界面下载)
+略
 
-安装成功后, 即可使用
+### 2. 进入 cmd/terminal
+
+win 搜索 cmd, mac 搜索 terminal
+
+### 3. 安装本项目包
+
+首先复制下载下载来的路径, 然后在 cmd/terminal 中输入以下指令
+
+pip install {你的路径}
+
+### 4. 配置 OPENAI_API_KEY
+
+在命令行输入以下指令
+excel_translate edit --config
+
+然后在 config.json 中配置 OPENAI_API_KEY
+
+### 5. 配置 你需要自定义的翻译规则
+
+在 config.json 中配置其他命令规则
+
+### 6.开始使用
+
+"""
+excel_translate process -i {需要翻译的 xlsx 文件} -o {翻译出来的结果路径(文件可以存在)} -i_range {需要翻译的范围如"G1:G30"} -o_range {翻译的结果输出的范围如:"I1:I30"}
+"""
+
+一个参考例子:
+"""
+excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30
+"""
 
 ## 使用方法
 
@@ -33,11 +63,9 @@ pip install excel_translate-0.1.8-py3-none-any.whl (这个文件你可以在 rel
 
 配置完成后, 通过以下方式进行文件的翻译
 
-```
 """
 excel_translate process -i /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx -o /Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx -i_range G1:G30 -o_range I1:I30
 """
-```
 
 -i: 输入文件的路径
 

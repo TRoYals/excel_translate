@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import subprocess
 import re
 from typing import List
+import platform
 
 
 class AI_chat:
@@ -46,12 +47,18 @@ class AI_chat:
 
     def edit_env_file(self):
         env_file = ".env"
-        subprocess.run(["vim", env_file])
+        if platform.system() == "Windows":
+            subprocess.run(["notepad", env_file])
+        else:
+            subprocess.run(["vim", env_file])
 
     def edit_config_file(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         config_path = os.path.join(base_dir, "config.json")
-        subprocess.run(["vim", config_path])
+        if platform.system() == "Windows":
+            subprocess.run(["notepad", config_path])
+        else:
+            subprocess.run(["vim", config_path])
 
     # FIXME: may add some feature to this
     def chat_translate(
