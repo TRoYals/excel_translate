@@ -1,135 +1,65 @@
+import threading
 import openpyxl
-from openpyxl.utils import (
-    get_column_letter,
-    column_index_from_string,
-)
-from openpyxl.utils.cell import coordinate_from_string, column_index_from_string
-import numpy as np
-import os
+from concurrent.futures import ThreadPoolExecutor
 from excel_translate.ai_utils import AI_chat
+import os
+import shutil
 
 
 class ExcelProcessor:
-    def __init__(
-        self,
-        input_file,
-        output_file,
-        input_range,
-        output_range,
-        input_sheet_name=None,
-        output_sheet_name=None,
-    ):
+
+    def __init__(self, input_file, output_file=None, input_range=None, output_range=None,input_sheet=None,output_sheet=None,max_workers=40):
         self.input_file = input_file
-        self.output_file = output_file
+        self.output_file = output_file or input_file.replace('.xlsx', '_output.xlsx')
         self.input_range = input_range
         self.output_range = output_range
-        self.input_sheet_name = input_sheet_name
-        self.output_sheet_name = output_sheet_name
+        self.input_sheet = input_sheet
+        self.output_sheet = output_sheet
+        self.max_workers = max_workers
+        self.lock = threading.Lock()
+
+    def translate_row(self, in_row, out_row):
+        translated_row = [self.translate_cell(cell.value) for cell in in_row]
+        
+        with self.lock:
+            for cell, translated_value in zip(out_row, translated_row):
+                cell.value = translated_value
+
+    def translate_cell(self, cell_value):
+        return AI_chat().chat_translate(cell_value)
 
     def process_excel(self):
-        # Check if output file exists
-        if not os.path.isfile(self.input_file):
-            raise Exception(f"Input file {self.input_file} does not exist.")
-            # Load the input workbook
         wb_input = openpyxl.load_workbook(self.input_file)
+        ws_input = self.input_sheet or wb_input.active
+        if not os.path.exists(self.output_file):
+            shutil.copy(self.input_file, self.output_file)
 
-        # Check if input sheet exists
-        if self.input_sheet_name and self.input_sheet_name not in wb_input.sheetnames:
-            raise Exception(
-                f"Input sheet {self.input_sheet_name} does not exist in the input file."
-            )
-        # Modify range processing to handle a single letter
+        wb_output = openpyxl.load_workbook(self.output_file)
+        ws_output = self.output_sheet or wb_output.active
+            
+        input_cells = list(ws_input[self.input_range])
+        output_cells = list(ws_output[self.output_range])
 
-        def convert_range(r):
-            if ":" in r:
-                return r
-            else:
-                max_row = str(wb_input.active.max_row)
-                return r + "1:" + r + max_row
+        with ThreadPoolExecutor(self.max_workers) as executor:
+            for in_row, out_row in zip(input_cells, output_cells):
+                executor.submit(self.translate_row, in_row, out_row)
 
-        self.input_range = convert_range(self.input_range)
-        self.output_range = convert_range(self.output_range)
-        # Check if input range equals output range
-        start_cell_input, end_cell_input = self.input_range.split(":")
-        start_cell_output, end_cell_output = self.output_range.split(":")
-
-        col_input_start, row_input_start = coordinate_from_string(start_cell_input)
-        col_input_end, row_input_end = coordinate_from_string(end_cell_input)
-        col_output_start, row_output_start = coordinate_from_string(start_cell_output)
-        col_output_end, row_output_end = coordinate_from_string(end_cell_output)
-
-        if (
-            column_index_from_string(col_input_end)
-            - column_index_from_string(col_input_start)
-            != column_index_from_string(col_output_end)
-            - column_index_from_string(col_output_start)
-        ) or (
-            int(row_input_end) - int(row_input_start)
-            != int(row_output_end) - int(row_output_start)
-        ):
-            raise Exception("The input range and output range are not equal.")
-
-        if os.path.isfile(self.output_file):
-            wb = openpyxl.load_workbook(self.output_file)
-        else:
-            # Load the input workbook and save as a new output file if the output file does not exist
-            wb = openpyxl.load_workbook(self.input_file)
-            wb.save(self.output_file)
-
-        # Get the selected output sheet or the first sheet if not specified
-        if self.output_sheet_name is None:
-            sheet = wb.active
-        else:
-            sheet = wb[self.output_sheet_name]
-
-        # Read the input range data
-        input_data = []
-        for row in sheet[self.input_range]:
-            row_data = [cell.value for cell in row]
-            input_data.append(row_data)
-        translated_data = self.translate_data(input_data)
-        # Write the output range data
-        for output_row, input_row in zip(sheet[self.output_range], translated_data):
-            # print(output_row, input_row)
-            for output_cell, input_value in zip(output_row, input_row):
-                output_cell.value = input_value
-
-        # Save the modified workbook
-        wb.save(self.output_file)
-
-    @staticmethod
-    def translate_data(input_data, batch_size=10):
-        input_data = np.array(input_data)
-        num_rows, num_cols = input_data.shape
-        translated_data = []
-        for i in range(0, num_rows, batch_size):
-            batch = input_data[i : i + batch_size]
-            batch_list = batch.ravel().tolist()
-            print(batch_list)
-            translated_batch_list = AI_chat().translated_list_to_list(batch_list)
-            print(translated_batch_list)
-            translated_batch = np.array(translated_batch_list).reshape(batch.shape)
-            translated_data.append(translated_batch)
-        translated_data = np.concatenate(translated_data)
-        return translated_data.tolist()
-
+        wb_output.save(self.output_file)
 
 if __name__ == "__main__":
-    # Example usage
     input_file = (
         "/Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/test_1.xlsx"
     )
+    input_range = "D1:D40"
+    output_range = "E1:E40"
     output_file = (
         "/Users/fuqixuan/Documents/vscode/excel_translate/tests/test_files/output.xlsx"
     )
-    input_range = "G1:G100"
-    output_range = "I1:I100"
-
     excel_processor = ExcelProcessor(
         input_file,
         output_file,
-        input_range,
-        output_range,
+        input_range=input_range,
+        output_range=output_range,
     )
 
     excel_processor.process_excel()

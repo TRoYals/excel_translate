@@ -4,8 +4,7 @@
 
 ## TODO:
 
-- [ ] 开放 batch_size 参数(每次请求翻译多少个 excel_cell)
-- [ ] 使用并发来加快翻译速度
+- [x] 使用并发来加快翻译速度
 
 ## 步骤
 
@@ -46,6 +45,8 @@ excel_translate edit --config
 
 在 config.json 中配置其他命令规则
 
+通过 excel_translate edit --preview 预览 prompt
+
 ### 6.开始使用
 
 `excel_translate process -i {需要翻译的 xlsx 文件} -o {翻译出来的结果路径(文件可以存在)} -i_range {需要翻译的范围如"G1:G30"} -o_range {翻译的结果输出的范围如:"I1:I30"}`
@@ -72,16 +73,20 @@ excel_translate edit --config
 
 -o_range: 输出文件的翻译范围 (excel 的单元格范围)
 
+-max_workers: 最大的并发数, 默认为 40
+
 ## 使用的 prompt:
 
-"""Here is a list of text you need translate from {translate_from} to {translate_to}, your translation should followed the rules below:{translate_rules},
-Here is the word list you need to translate:{translate_test} .Your response must be in JSON format, not in a list object,and the JSON must have the same length with the list. eg: ["中国","美国"] must be in the format {{{{'中国': 'Chinese'}},{{'美国': 'America}}}}
-{extract_text}"""
+"Here is a list of text you need translate from {translate_from} to {translate_to}, your translation should followed the rules below:{translate_rules},
+And you must only return the sentence that have been translated, here is the sentence you need to translate:
+{translate_test}
+
+{extra_text}
 
 translate_from 字段: 你需要翻译的语言
 translate_to 字段: 你需要翻译成的语言
 translate_rules 字段: 你需要 ChatGPT 遵守的翻译规则
-extra_text 字段: 额外的指令
+extra_text 字段: 额外的指令(可以放一些翻译示例)
 
 你可以通过这个指令编辑以上的字段: `excel_translate edit --config`
 

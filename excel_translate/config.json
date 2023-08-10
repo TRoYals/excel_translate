@@ -1,6 +1,6 @@
 {
-  "rules": "1. Only translate the Chinese part, do not translate the English specific words.\\n2. For the system route part, do not translate, e.g. D:\\\\工作\\\\任务\\\\bug处理\\\\SWY-79001\\\\1.pdf.\\n3. Do not translate every placeholder and keep them the same like %%s.\\n4. For the URL, please only translate the Chinese part, do not translate the English specific words, e.g. https://www.baidu.com.\\n5. For the format [# #], do not translate the English specific words, e.g. [# SWY-79001#], [#taskname#].\\n6. For the format <%= %%s %%>, do not translate the English specific words, e.g. <%=propName%>.",
-  "translate_to": "German",
+  "rules": "1. Only translate the Chinese part, do not translate the English specific words.2.Do not translate the word in camel format;3. must not have any Chinese words",
+  "translate_to": "Indonesian",
   "translate_from": "Chinese",
   "extra_text": "",
   "OPENAI_API_KEY": ""

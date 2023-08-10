@@ -45,26 +45,27 @@ def main():
     parser_process.add_argument(
         "--output_sheet_name", type=str, help="Output sheet name"
     )
-
+    parser_process.add_argument("--max_workers", type=int, help="max work threads")
     parser_edit = subparsers.add_parser("edit", help="Edit configuration.")
-    parser_edit.add_argument("--env", action="store_true", help="Edit .env file")
+    parser_edit.add_argument("--preview", action="store_true", help="preview your prompt")
     parser_edit.add_argument("--config", action="store_true", help="Edit config file")
 
     args = parser.parse_args()
 
     if args.command == "edit":
-        if args.env:
-            edit_config_file()
         if args.config:
             edit_config_file()
+        if args.preview:
+            AI_chat().chat_translate(text="{{text to be translated}}", preview=True)
     elif args.command == "process":
         excel_processor = ExcelProcessor(
-            args.input_file,
-            args.output_file,
-            args.input_range,
-            args.output_range,
-            args.input_sheet_name,
-            args.output_sheet_name,
+            input_file=args.input_file,
+            output_file=args.output_file,
+            input_range=args.input_range,
+            output_range=args.output_range,
+            input_sheet=args.input_sheet_name,
+            output_sheet=args.output_sheet_name,
+            max_workers=args.max_workers
         )
         excel_processor.process_excel()
     else:
