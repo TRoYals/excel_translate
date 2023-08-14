@@ -3,10 +3,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 import os
 from dotenv import load_dotenv
-import subprocess
 import re
 from typing import List
-import platform
 
 
 class AI_chat:
@@ -15,15 +13,14 @@ class AI_chat:
     load_dotenv()
 
     def __init__(self) -> None:
-        self.translate_rules = None
+        self.template = None
         self.translate_to = None
-        self.translate_from = None
-        self.extra_text = None
         self.openai_api_key = None
+        self.temperate = 0.5
         self.read_config()
         self.model = ChatOpenAI(
             openai_api_key=self.openai_api_key,
-            temperature=0,
+            temperature=self.temperate,
         )  # type: ignore
 
     def read_config(self):
@@ -33,11 +30,10 @@ class AI_chat:
         try:
             with open(config_path, "r",encoding="utf-8") as config_file:
                 config_data = json.load(config_file)
-            self.translate_rules = config_data.get("rules")
+            self.translate_rules = config_data.get("template")
             self.translate_to = config_data.get("translate_to")
-            self.translate_from = config_data.get("translate_from")
-            self.extra_text = config_data.get("extra_text")
             self.openai_api_key = config_data.get("OPENAI_API_KEY")
+            self.temperate = config_data.get("temperate")
         except FileNotFoundError:
             print("config.json not found.")
         except json.JSONDecodeError:
@@ -51,18 +47,9 @@ class AI_chat:
         text,
         preview=False,
     ):
-        content = """Here is a list of text you need translate from {translate_from} to {translate_to}, your translation should followed the rules below:{translate_rules},
-        And you must only return the sentence that have been translated,  here is the sentence you need to translate:
-          {translate_test}
-        
-        {extra_text}"""
-
-        content = content.format(
+        content = self.translate_rules.format(
             translate_test=text,
-            translate_from=self.translate_from,
             translate_to=self.translate_to,
-            translate_rules=self.translate_rules,
-            extra_text=self.extra_text,
         )
         Human_message = HumanMessage(content=content)
         if (preview):
@@ -128,4 +115,3 @@ if __name__ == "__main__":
             "此配送员有待处理的配送单，请先转移"
 
     )
-    print(test)
