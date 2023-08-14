@@ -47,6 +47,8 @@ excel_translate edit --config
 
 通过 excel_translate edit --preview 预览 prompt
 
+ps: 如果觉得翻译的质量不太好, 可以添加一些翻译示例
+
 ### 6.开始使用
 
 `excel_translate process -i {需要翻译的 xlsx 文件} -o {翻译出来的结果路径(文件可以存在)} -i_range {需要翻译的范围如"G1:G30"} -o_range {翻译的结果输出的范围如:"I1:I30"}`
@@ -77,17 +79,15 @@ excel_translate edit --config
 
 ## 使用的 prompt:
 
-"Here is a list of text you need translate from {translate_from} to {translate_to}, your translation should followed the rules below:{translate_rules},
-And you must only return the sentence that have been translated, here is the sentence you need to translate:
-{translate_test}
+你可以完全自定义翻译模板, 只需要保证有{translate_to}和{translate_text}即可
 
-{extra_text}
-
-translate_from 字段: 你需要翻译的语言
 translate_to 字段: 你需要翻译成的语言
-translate_rules 字段: 你需要 ChatGPT 遵守的翻译规则
-extra_text 字段: 额外的指令(可以放一些翻译示例)
+translate_text 字段: 你需要翻译的文本(即每个单元格的内容)
 
 你可以通过这个指令编辑以上的字段: `excel_translate edit --config`
 
 输入这个指令后, 你可以使用`vim`来编辑 config.json(mac\linux), `notepad` 来编辑 config.json(win)
+
+### 其他
+
+之前想过输入一次 prompt 来翻译多个单元格(通过 json 转列表的形式), 但翻译质量会明显下降而且经常会遇到单元格内文字过多导致超过 token, 所以改成了次翻译一个单元格
