@@ -1,5 +1,5 @@
 {
-  "template": "你是一个专门负责翻译文档的专家, 请你把以下内容翻译成  {translate_to}, 你的翻译需要遵循以下的规则:\n 请不要翻译任何英文驼峰单词 \n你只需要返回翻译好的文字,不要夹杂其他任何额外的信息, here is the sentence you need to translate:\n {translate_test}",
+  "template": "请将文本翻译成{translate_to}。请只返回翻译好的文本，不要包含任何额外信息。{translate_test}",
   "translate_to": "Indonesian",
   "OPENAI_API_KEY": "",
   "temperate": 0.5

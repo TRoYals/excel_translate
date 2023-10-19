@@ -19,7 +19,7 @@
 
 ### 1. 安装 python 环境
 
-略
+参考 [可能是全网最详细的 Python 安装教程（windows） - 知乎](https://zhuanlan.zhihu.com/p/111168324)
 
 ### 2. 进入 cmd/terminal
 
@@ -27,7 +27,7 @@ win 搜索 cmd, mac 搜索 terminal
 
 ### 3. 安装本项目包
 
-首先下载 abcde.whl,然后复制你下载下来的文件路径, 然后在 cmd/terminal 中输入以下指令
+首先下载 XXXXXX.whl,然后复制你下载下来的文件路径, 然后在 cmd/terminal 中输入以下指令
 
 pip install {你的路径}
 
@@ -87,7 +87,3 @@ translate_text 字段: 你需要翻译的文本(即每个单元格的内容)
 你可以通过这个指令编辑以上的字段: `excel_translate edit --config`
 
 输入这个指令后, 你可以使用`vim`来编辑 config.json(mac\linux), `notepad` 来编辑 config.json(win)
-
-### 其他
-
-之前想过输入一次 prompt 来翻译多个单元格(通过 json 转列表的形式), 但翻译质量会明显下降而且经常会遇到单元格内文字过多导致超过 token, 所以改成了次翻译一个单元格

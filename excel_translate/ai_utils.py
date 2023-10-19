@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 import re
 from typing import List
-
+import time
 
 class AI_chat:
     """where we chat"""
@@ -21,6 +21,8 @@ class AI_chat:
         self.model = ChatOpenAI(
             openai_api_key=self.openai_api_key,
             temperature=self.temperate,
+            max_retries=3,
+            request_timeout=30  # seconds
         )  # type: ignore
 
     def read_config(self):
@@ -62,6 +64,8 @@ class AI_chat:
     def test_chat_translate(
             self,text
     ):
+        print('start translate')
+        time.sleep(5)
         return text + "test"
 
     # def text_to_lists(self, text: str) -> List[str]:
