@@ -21,6 +21,8 @@
 
 参考 [可能是全网最详细的 Python 安装教程（windows） - 知乎](https://zhuanlan.zhihu.com/p/111168324)
 
+[liaoxuefeng 的 pyhton 教程](https://www.liaoxuefeng.com/wiki/1016959663602400/1016959856222624)
+
 ### 2. 进入 cmd/terminal
 
 win 搜索 cmd, mac 搜索 terminal
