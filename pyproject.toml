@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "excel-translate"
-version = "0.1.20"
+version = "0.2.2"
 description = "translate excel columns based on customized rules!"
 authors = ["TRoYals <aozora00321@gmail.com>"]
 license = "MIT"

@@ -4,6 +4,7 @@ from excel_translate.excel_opreations import ExcelProcessor
 import os
 import platform
 import subprocess
+from excel_translate.excel_translation_check import ExcelChecker
 
 
 def edit_config_file():
@@ -19,7 +20,31 @@ def main():
     parser = argparse.ArgumentParser(description="Excel processing tool")
 
     subparsers = parser.add_subparsers(dest="command")
-
+    parser_check = subparsers.add_parser(
+        "check", help="Check translations in excel file."
+    )
+    parser_check.add_argument(
+        "-i",
+        "--input_file",
+        type=str,
+        required=True,
+        help="Input excel file path to be checked",
+    )
+    parser_check.add_argument(
+        "-i_range",
+        "--input_range",
+        type=str,
+        required=True,
+        help="Input range in excel",
+    )
+    parser_check.add_argument(
+        "-o_range",
+        "--output_range",
+        type=str,
+        required=True,
+        help="Output range in excel",
+    )
+    parser_check.add_argument("--input_sheet_name", type=str, help="Input sheet name")
     parser_process = subparsers.add_parser("process", help="Process excel file.")
     parser_process.add_argument(
         "-i", "--input_file", type=str, required=True, help="Input file path"
@@ -47,7 +72,9 @@ def main():
     )
     parser_process.add_argument("--max_workers", type=int, help="max work threads")
     parser_edit = subparsers.add_parser("edit", help="Edit configuration.")
-    parser_edit.add_argument("--preview", action="store_true", help="preview your prompt")
+    parser_edit.add_argument(
+        "--preview", action="store_true", help="preview your prompt"
+    )
     parser_edit.add_argument("--config", action="store_true", help="Edit config file")
 
     args = parser.parse_args()
@@ -57,6 +84,16 @@ def main():
             edit_config_file()
         if args.preview:
             AI_chat().chat_translate(text="{{text to be translated}}", preview=True)
+    # 检查'check'子命令
+    elif args.command == "check":
+        excel_checker = ExcelChecker(
+            input_file=args.input_file,
+            input_range=args.input_range,
+            output_range=args.output_range,
+            input_sheet=args.input_sheet_name,
+        )
+        excel_checker.process_translations()
+
     elif args.command == "process":
         excel_processor = ExcelProcessor(
             input_file=args.input_file,
@@ -65,7 +102,7 @@ def main():
             output_range=args.output_range,
             input_sheet=args.input_sheet_name,
             output_sheet=args.output_sheet_name,
-            max_workers=args.max_workers
+            max_workers=args.max_workers,
         )
         excel_processor.process_excel()
     else:

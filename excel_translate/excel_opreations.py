@@ -7,10 +7,16 @@ import shutil
 
 
 class ExcelProcessor:
-
-    def __init__(self, input_file, output_file=None, input_range=None, output_range=None,input_sheet=None,output_sheet=None,max_workers=40):
+    def __init__(
+        self,
+        input_file,
+        input_range,
+        output_range,
+        input_sheet=None,
+        output_sheet=None,
+        max_workers=40,
+    ):
         self.input_file = input_file
-        self.output_file = output_file
         self.input_range = input_range
         self.output_range = output_range
         self.input_sheet = input_sheet
@@ -18,6 +24,12 @@ class ExcelProcessor:
         self.max_workers = max_workers
 
     def translate_row(self, in_row, out_row):
+        input_col_start, input_row_start = self.input_range.split(":")[0][0], int(
+            self.input_range.split(":")[0][1:]
+        )
+        input_col_end, input_row_end = self.input_range.split(":")[1][0], int(
+            self.input_range.split(":")[1][1:]
+        )
         translated_row = [self.translate_cell(cell.value) for cell in in_row]
         for cell, translated_value in zip(out_row, translated_row):
             cell.value = translated_value
